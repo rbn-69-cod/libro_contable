@@ -245,10 +245,10 @@ function LibroMayor({ filtroDesde, filtroHasta, ocultarFiltros, empresaNombre = 
                                         >
                                             <td className="account-code">{cuenta.codigo}</td>
                                             <td>{cuenta.nombre}</td>
-                                            <td>$ {moneda(cuenta.total_debe)}</td>
-                                            <td>$ {moneda(cuenta.total_haber)}</td>
-                                            <td>$ {moneda(cuenta.saldo_deudor)}</td>
-                                            <td>$ {moneda(cuenta.saldo_acreedor)}</td>
+                                            <td>S/ {moneda(cuenta.total_debe)}</td>
+                                            <td>S/ {moneda(cuenta.total_haber)}</td>
+                                            <td>S/ {moneda(cuenta.saldo_deudor)}</td>
+                                            <td>S/ {moneda(cuenta.saldo_acreedor)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -266,16 +266,16 @@ function LibroMayor({ filtroDesde, filtroHasta, ocultarFiltros, empresaNombre = 
                                                 Comprobación:
                                             </td>
                                             <td style={{ fontWeight: 800, padding: "12px 10px" }}>
-                                                $ {moneda(totalesComprobacion.total_debe)}
+                                                S/ {moneda(totalesComprobacion.total_debe)}
                                             </td>
                                             <td style={{ fontWeight: 800, padding: "12px 10px" }}>
-                                                $ {moneda(totalesComprobacion.total_haber)}
+                                                S/ {moneda(totalesComprobacion.total_haber)}
                                             </td>
                                             <td style={{ fontWeight: 800, padding: "12px 10px" }}>
-                                                $ {moneda(totalesComprobacion.saldo_deudor)}
+                                                S/ {moneda(totalesComprobacion.saldo_deudor)}
                                             </td>
                                             <td style={{ fontWeight: 800, padding: "12px 10px" }}>
-                                                $ {moneda(totalesComprobacion.saldo_acreedor)}
+                                                S/ {moneda(totalesComprobacion.saldo_acreedor)}
                                             </td>
                                         </tr>
                                     )}

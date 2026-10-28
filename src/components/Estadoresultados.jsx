@@ -6,11 +6,11 @@ import ExportarPdfButton from "./ExportarPdfButton";
 import CuentaT from "./CuentaT";
 import { obtenerConfiguracionKardex, EVENTO_CONFIG_KARDEX_ACTUALIZADA } from "../utils/kardexCalculos";
 
-// como en la hoja: cero = "$ -" y negativos = "-$ 1,000.00"
+// como en la hoja: cero = "S/ -" y negativos = "-S/ 1,000.00"
 function moneda(valor) {
-    if (valor === 0) return "$ -";
+    if (valor === 0) return "S/ -";
     const texto = Math.abs(valor).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    return `${valor < 0 ? "-" : ""}$ ${texto}`;
+    return `${valor < 0 ? "-" : ""}S/ ${texto}`;
 }
 
 const fechaCorta = iso => (iso ? iso.split("-").reverse().join("/") : "");

@@ -73,16 +73,16 @@ function ChevronRight({ size = 14, className = "", style = {} }) {
     );
 }
 
-// Formato de moneda contable: $ 1,234.56 o ($ 1,234.56) si es negativo
+// Formato de moneda contable: S/ 1,234.56 o (S/ 1,234.56) si es negativo
 function formatearMoneda(valor) {
-    if (valor === 0 || valor === null || valor === undefined) return "$ 0.00";
+    if (valor === 0 || valor === null || valor === undefined) return "S/ 0.00";
     const num = Number(valor);
-    if (isNaN(num)) return "$ 0.00";
+    if (isNaN(num)) return "S/ 0.00";
     const texto = Math.abs(num).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
-    return num < 0 ? `($ ${texto})` : `$ ${texto}`;
+    return num < 0 ? `(S/ ${texto})` : `S/ ${texto}`;
 }
 
 function formatearFechaCorte(fechaStr) {

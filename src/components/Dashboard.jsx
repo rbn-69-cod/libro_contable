@@ -413,11 +413,11 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                     <div className="audit-stat-lines">
                         <div className="audit-stat-item">
                             <span className="audit-stat-label">Total Debe</span>
-                            <strong className="audit-stat-val">$ {moneda(totalDebeGlobal)}</strong>
+                            <strong className="audit-stat-val">S/ {moneda(totalDebeGlobal)}</strong>
                         </div>
                         <div className="audit-stat-item">
                             <span className="audit-stat-label">Total Haber</span>
-                            <strong className="audit-stat-val">$ {moneda(totalHaberGlobal)}</strong>
+                            <strong className="audit-stat-val">S/ {moneda(totalHaberGlobal)}</strong>
                         </div>
                         <div className="audit-stat-item">
                             <span className="audit-stat-label">Partidas Contabilizadas</span>
@@ -440,7 +440,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                         <span className="kpi-kicker">Activos</span>
                         <span className="kpi-badge kpi-badge-green">Recursos</span>
                     </div>
-                    <strong className="kpi-value">$ {moneda(activos)}</strong>
+                    <strong className="kpi-value">S/ {moneda(activos)}</strong>
                     <p className="kpi-sub">Bancos, caja, inventarios y bienes</p>
                 </article>
 
@@ -449,7 +449,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                         <span className="kpi-kicker">Pasivos</span>
                         <span className="kpi-badge kpi-badge-amber">Obligaciones</span>
                     </div>
-                    <strong className="kpi-value">$ {moneda(pasivos)}</strong>
+                    <strong className="kpi-value">S/ {moneda(pasivos)}</strong>
                     <p className="kpi-sub">Proveedores y deudas a pagar</p>
                 </article>
 
@@ -458,7 +458,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                         <span className="kpi-kicker">Patrimonio Neto</span>
                         <span className="kpi-badge kpi-badge-blue">Capital</span>
                     </div>
-                    <strong className="kpi-value">$ {moneda(patrimonio)}</strong>
+                    <strong className="kpi-value">S/ {moneda(patrimonio)}</strong>
                     <p className="kpi-sub">Fondos propios (Activo − Pasivo)</p>
                 </article>
 
@@ -467,7 +467,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                         <span className="kpi-kicker">Ingresos Netos</span>
                         <span className="kpi-badge kpi-badge-green">Ventas</span>
                     </div>
-                    <strong className="kpi-value">$ {moneda(ingresos)}</strong>
+                    <strong className="kpi-value">S/ {moneda(ingresos)}</strong>
                     <p className="kpi-sub">Facturación neta del período</p>
                 </article>
 
@@ -476,7 +476,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                         <span className="kpi-kicker">Costos y Gastos</span>
                         <span className="kpi-badge kpi-badge-amber">Egresos</span>
                     </div>
-                    <strong className="kpi-value">$ {moneda(gastosTotales)}</strong>
+                    <strong className="kpi-value">S/ {moneda(gastosTotales)}</strong>
                     <p className="kpi-sub">Costo de ventas + operación</p>
                 </article>
 
@@ -487,7 +487,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                             {utilidadNeta >= 0 ? `Margen: ${margenNeto}%` : "Déficit"}
                         </span>
                     </div>
-                    <strong className="kpi-value">$ {moneda(utilidadNeta)}</strong>
+                    <strong className="kpi-value">S/ {moneda(utilidadNeta)}</strong>
                     <p className="kpi-sub">{utilidadNeta >= 0 ? "Rendimiento neto positivo" : "Resultado negativo del período"}</p>
                 </article>
             </div>
@@ -506,11 +506,11 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
 
                     <div className="financial-chart-container">
                         <div className="chart-vertical-scale">
-                            <span>$ {moneda(maxBarra)}</span>
-                            <span>$ {moneda(maxBarra * 0.75)}</span>
-                            <span>$ {moneda(maxBarra * 0.5)}</span>
-                            <span>$ {moneda(maxBarra * 0.25)}</span>
-                            <span>$ 0.00</span>
+                            <span>S/ {moneda(maxBarra)}</span>
+                            <span>S/ {moneda(maxBarra * 0.75)}</span>
+                            <span>S/ {moneda(maxBarra * 0.5)}</span>
+                            <span>S/ {moneda(maxBarra * 0.25)}</span>
+                            <span>S/ 0.00</span>
                         </div>
 
                         <div className="chart-columns-area">
@@ -528,7 +528,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                                         {esHover && (
                                             <div className="chart-tooltip">
                                                 <strong>{b.etiqueta}</strong>
-                                                <span>$ {moneda(b.valor)}</span>
+                                                <span>S/ {moneda(b.valor)}</span>
                                                 <small>{b.desc}</small>
                                             </div>
                                         )}
@@ -540,7 +540,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                                                 backgroundColor: b.color
                                             }}
                                         >
-                                            <span className="bar-val-label">$ {moneda(b.valor)}</span>
+                                            <span className="bar-val-label">S/ {moneda(b.valor)}</span>
                                         </div>
 
                                         <span className="chart-bar-caption">{b.etiqueta}</span>
@@ -612,7 +612,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
 
                         <div className="donut-inner-content">
                             <span className="donut-inner-label">Activos</span>
-                            <strong className="donut-inner-number">$ {moneda(activos)}</strong>
+                            <strong className="donut-inner-number">S/ {moneda(activos)}</strong>
                         </div>
                     </div>
 
@@ -623,7 +623,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                                 <span>Patrimonio Neto</span>
                             </div>
                             <div className="donut-legend-right">
-                                <strong>$ {moneda(patrimonio)}</strong>
+                                <strong>S/ {moneda(patrimonio)}</strong>
                                 <span className="donut-pct">({pctPatrimonio}%)</span>
                             </div>
                         </div>
@@ -634,7 +634,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                                 <span>Pasivos (Terceros)</span>
                             </div>
                             <div className="donut-legend-right">
-                                <strong>$ {moneda(pasivos)}</strong>
+                                <strong>S/ {moneda(pasivos)}</strong>
                                 <span className="donut-pct">({pctPasivo}%)</span>
                             </div>
                         </div>
@@ -806,7 +806,7 @@ function Dashboard({ cambiarVista, usuario, empresaNombre = "Empresa" }) {
                                                 <strong>{String(asiento.concepto || "Sin concepto").replace(/^C\/\s*/i, "")}</strong>
                                             </td>
                                             <td className="entry-amount-cell">
-                                                $ {moneda(totalPartida)}
+                                                S/ {moneda(totalPartida)}
                                             </td>
                                             <td style={{ textAlign: "center" }}>
                                                 <span className="entry-row-arrow" title="Ver en Libro Diario">

@@ -479,8 +479,8 @@ function ModalRectificarAsiento({ asiento, cuentas, onCerrar, onGuardado }) {
                                     <tr>
                                         <th style={{ width: "42%" }}>Subcuenta Contable</th>
                                         <th style={{ width: "26%" }}>Descripción (Opcional)</th>
-                                        <th style={{ width: "15%", textAlign: "right" }}>Débito ($)</th>
-                                        <th style={{ width: "15%", textAlign: "right" }}>Crédito ($)</th>
+                                        <th style={{ width: "15%", textAlign: "right" }}>Débito (S/)</th>
+                                        <th style={{ width: "15%", textAlign: "right" }}>Crédito (S/)</th>
                                         <th style={{ width: "2%", textAlign: "center" }}></th>
                                     </tr>
                                 </thead>
@@ -545,10 +545,10 @@ function ModalRectificarAsiento({ asiento, cuentas, onCerrar, onGuardado }) {
                                     <tr className="modal-rect-total-row">
                                         <td colSpan="2" style={{ textAlign: "right", padding: "8px 10px" }}>Totales:</td>
                                         <td style={{ textAlign: "right", padding: "8px 10px", color: estaCuadrado ? "#10b981" : "#ef4444" }}>
-                                            $ {moneda(totalDebe)}
+                                            S/ {moneda(totalDebe)}
                                         </td>
                                         <td style={{ textAlign: "right", padding: "8px 10px", color: estaCuadrado ? "#10b981" : "#ef4444" }}>
-                                            $ {moneda(totalHaber)}
+                                            S/ {moneda(totalHaber)}
                                         </td>
                                         <td></td>
                                     </tr>
@@ -562,7 +562,7 @@ function ModalRectificarAsiento({ asiento, cuentas, onCerrar, onGuardado }) {
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <span>{estaCuadrado ? "✓" : "⚠️"}</span>
                             <strong>
-                                {estaCuadrado ? "Partida Doble Cuadrada (Debe = Haber)" : `Diferencia de cuadre: $ ${moneda(diferencia)}`}
+                                {estaCuadrado ? "Partida Doble Cuadrada (Debe = Haber)" : `Diferencia de cuadre: S/ ${moneda(diferencia)}`}
                             </strong>
                         </div>
                         <span style={{ fontSize: "12px", opacity: 0.85 }}>
@@ -762,10 +762,10 @@ function ModalHistorialRectificacion({ asiento, cuentas = [], onCerrar }) {
                                             <tr key={idx}>
                                                 <td><strong>{l.cuenta_codigo}</strong> - {l.cuenta_nombre}</td>
                                                 <td style={{ textAlign: "right", fontFamily: "monospace" }}>
-                                                    {Number(l.debe) > 0 ? `$ ${moneda(l.debe)}` : ""}
+                                                    {Number(l.debe) > 0 ? `S/ ${moneda(l.debe)}` : ""}
                                                 </td>
                                                 <td style={{ textAlign: "right", fontFamily: "monospace" }}>
-                                                    {Number(l.haber) > 0 ? `$ ${moneda(l.haber)}` : ""}
+                                                    {Number(l.haber) > 0 ? `S/ ${moneda(l.haber)}` : ""}
                                                 </td>
                                             </tr>
                                         ))}
@@ -797,10 +797,10 @@ function ModalHistorialRectificacion({ asiento, cuentas = [], onCerrar }) {
                                             <tr key={idx}>
                                                 <td><strong style={{ color: "#10b981" }}>{cod}</strong> - {nom}</td>
                                                 <td style={{ textAlign: "right", fontFamily: "monospace", fontWeight: "700" }}>
-                                                    {Number(l.debe) > 0 ? `$ ${moneda(l.debe)}` : ""}
+                                                    {Number(l.debe) > 0 ? `S/ ${moneda(l.debe)}` : ""}
                                                 </td>
                                                 <td style={{ textAlign: "right", fontFamily: "monospace", fontWeight: "700" }}>
-                                                    {Number(l.haber) > 0 ? `$ ${moneda(l.haber)}` : ""}
+                                                    {Number(l.haber) > 0 ? `S/ ${moneda(l.haber)}` : ""}
                                                 </td>
                                             </tr>
                                         );
@@ -832,7 +832,7 @@ function ModalHistorialRectificacion({ asiento, cuentas = [], onCerrar }) {
                                         <div className="cuenta-t-col izquierda">
                                             <div className="cuenta-t-col-title">DEBE</div>
                                             <div className="cuenta-t-monto">
-                                                {cuentaT.debeDespues > 0 ? `$ ${moneda(cuentaT.debeDespues)}` : "—"}
+                                                {cuentaT.debeDespues > 0 ? `S/ ${moneda(cuentaT.debeDespues)}` : "—"}
                                             </div>
                                             {cuentaT.debeAntes > 0 && cuentaT.debeAntes !== cuentaT.debeDespues && (
                                                 <div className="cuenta-t-antes">
@@ -844,7 +844,7 @@ function ModalHistorialRectificacion({ asiento, cuentas = [], onCerrar }) {
                                         <div className="cuenta-t-col derecha">
                                             <div className="cuenta-t-col-title" style={{ textAlign: "right" }}>HABER</div>
                                             <div className="cuenta-t-monto" style={{ textAlign: "right" }}>
-                                                {cuentaT.haberDespues > 0 ? `$ ${moneda(cuentaT.haberDespues)}` : "—"}
+                                                {cuentaT.haberDespues > 0 ? `S/ ${moneda(cuentaT.haberDespues)}` : "—"}
                                             </div>
                                             {cuentaT.haberAntes > 0 && cuentaT.haberAntes !== cuentaT.haberDespues && (
                                                 <div className="cuenta-t-antes" style={{ textAlign: "right" }}>
@@ -856,7 +856,7 @@ function ModalHistorialRectificacion({ asiento, cuentas = [], onCerrar }) {
 
                                     <div className="cuenta-t-footer">
                                         <span>Saldo {esDeudor ? "Deudor" : "Acreedor"}:</span>
-                                        <strong>$ {moneda(Math.abs(saldo))}</strong>
+                                        <strong>S/ {moneda(Math.abs(saldo))}</strong>
                                     </div>
                                 </div>
                             );
@@ -2002,17 +2002,17 @@ function LibroDiario({ filtroDesde: propDesde, filtroHasta: propHasta, empresaNo
                                                 </td>
                                                 <td><strong>{grupo.padre.codigo} - {grupo.padre.nombre}</strong></td>
                                                 <td></td>
-                                                <td>{grupo.debe > 0 ? `$ ${moneda(grupo.debe)}` : ""}</td>
-                                                <td>{grupo.haber > 0 ? `$ ${moneda(grupo.haber)}` : ""}</td>
+                                                <td>{grupo.debe > 0 ? `S/ ${moneda(grupo.debe)}` : ""}</td>
+                                                <td>{grupo.haber > 0 ? `S/ ${moneda(grupo.haber)}` : ""}</td>
                                             </tr>
                                             {grupo.detalles.map((detalle, detalleIndice) => (
                                                 <tr className="diario-child-row" key={`${asiento.id}-${detalle.cuenta_id}-${detalleIndice}`}>
                                                     <td></td>
                                                     <td></td>
                                                     <td className="child-account">{detalle.cuentas?.codigo} - {detalle.cuentas?.nombre}</td>
-                                                    <td>{Number(detalle.debe || 0) + Number(detalle.haber || 0) > 0 ? `$ ${moneda(Number(detalle.debe || 0) + Number(detalle.haber || 0))}` : ""}</td>
-                                                    <td>{Number(detalle.debe || 0) > 0 ? `$ ${moneda(detalle.debe)}` : ""}</td>
-                                                    <td>{Number(detalle.haber || 0) > 0 ? `$ ${moneda(detalle.haber)}` : ""}</td>
+                                                    <td>{Number(detalle.debe || 0) + Number(detalle.haber || 0) > 0 ? `S/ ${moneda(Number(detalle.debe || 0) + Number(detalle.haber || 0))}` : ""}</td>
+                                                    <td>{Number(detalle.debe || 0) > 0 ? `S/ ${moneda(detalle.debe)}` : ""}</td>
+                                                    <td>{Number(detalle.haber || 0) > 0 ? `S/ ${moneda(detalle.haber)}` : ""}</td>
                                                 </tr>
                                             ))}
                                         </Fragment>
@@ -2100,8 +2100,8 @@ function LibroDiario({ filtroDesde: propDesde, filtroHasta: propHasta, empresaNo
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>$ {moneda(totalDebe)}</td>
-                                        <td>$ {moneda(totalHaber)}</td>
+                                        <td>S/ {moneda(totalDebe)}</td>
+                                        <td>S/ {moneda(totalHaber)}</td>
                                     </tr>
                                 </Fragment>
                             );
@@ -2110,8 +2110,8 @@ function LibroDiario({ filtroDesde: propDesde, filtroHasta: propHasta, empresaNo
                     <tfoot>
                         <tr className="diario-grand-total-row">
                             <th colSpan="4">Sumatoria general</th>
-                            <th>$ {moneda(sumatorias.debe)}</th>
-                            <th>$ {moneda(sumatorias.haber)}</th>
+                            <th>S/ {moneda(sumatorias.debe)}</th>
+                            <th>S/ {moneda(sumatorias.haber)}</th>
                         </tr>
                     </tfoot>
                 </table>

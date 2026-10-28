@@ -1,5 +1,5 @@
 function dinero(valor) {
-    return `$ ${Number(valor || 0).toLocaleString("en-US", {
+    return `S/ ${Number(valor || 0).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     })}`;
@@ -74,7 +74,7 @@ export function CuentaT({ cuenta, onCerrar }) {
 
                 <footer className="t-saldo">
                     {saldo === 0
-                        ? "Saldo: $ 0.00"
+                        ? "Saldo: S/ 0.00"
                         : `Saldo ${saldo > 0 ? "deudor" : "acreedor"}: ${dinero(Math.abs(saldo))}`}
                 </footer>
             </div>

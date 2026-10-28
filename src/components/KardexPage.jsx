@@ -160,7 +160,7 @@ export function KardexPage({ filtroDesde, filtroHasta, ocultarFiltros, empresaNo
                 <div className="kardex-stat-card border-l-4 border-l-emerald-500">
                     <span className="stat-label">Costo Promedio Ponderado</span>
                     <span className="stat-value stat-accent">
-                        {parametrosValidos ? (formatearMoneda(totales.costo_promedio_final, true) || "$ 0.00") : "—"}
+                        {parametrosValidos ? (formatearMoneda(totales.costo_promedio_final, true) || "S/ 0.00") : "—"}
                     </span>
                     <span className="stat-sub">Costo unitario por unidad</span>
                 </div>
@@ -198,7 +198,7 @@ export function KardexPage({ filtroDesde, filtroHasta, ocultarFiltros, empresaNo
                                 Costo unitario (sin IVA)
                             </label>
                             <div style={{ display: "flex", alignItems: "center", position: "relative" }}>
-                                <span style={{ position: "absolute", left: "10px", color: "#64748b", fontWeight: "600" }}>$</span>
+                                <span style={{ position: "absolute", left: "10px", color: "#64748b", fontWeight: "600" }}>S/</span>
                                 <input
                                     id="kardex-costo-unitario"
                                     name="costoUnitario"
@@ -228,7 +228,7 @@ export function KardexPage({ filtroDesde, filtroHasta, ocultarFiltros, empresaNo
                                 Precio de venta unitario (sin IVA)
                             </label>
                             <div style={{ display: "flex", alignItems: "center", position: "relative" }}>
-                                <span style={{ position: "absolute", left: "10px", color: "#64748b", fontWeight: "600" }}>$</span>
+                                <span style={{ position: "absolute", left: "10px", color: "#64748b", fontWeight: "600" }}>S/</span>
                                 <input
                                     id="kardex-precio-venta"
                                     name="precioVentaUnitario"

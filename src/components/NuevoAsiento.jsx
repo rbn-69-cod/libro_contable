@@ -9,6 +9,7 @@ import {
 import { obtenerCuentas } from "../services/cuentasService";
 import { obtenerEmpresas } from "../services/empresasService";
 import { supabaseConfigurado } from "../lib/supabase";
+import { demoActivo } from "../services/demoStore";
 import { calcularAsiento } from "../utils/asientoIva";
 import { exportarNuevoAsientoPDF, exportarNuevoAsientoExcel } from "../services/exportationService";
 import ExportarPdfButton from "./ExportarPdfButton";
@@ -79,7 +80,7 @@ function normalizarNumero(valor) {
     return Number.isFinite(numero) ? numero : 0;
 }
 
-const dinero = n => `$ ${n.toFixed(2)}`;
+const dinero = n => `S/ ${n.toFixed(2)}`;
 const dineroC = centavos => dinero(centavos / 100);
 
 // El Libro Diario ya antepone "C/", así que el concepto se guarda sin ese prefijo.
@@ -541,8 +542,8 @@ function NuevoAsiento({ usuario, empresaNombre = "Empresa", onCreated }){
 
     useEffect(() => {
         async function cargarDatos(){
-            if(!supabaseConfigurado){
-                setError("Configura Supabase para registrar asientos.");
+            if(!supabaseConfigurado && !demoActivo()){
+                setError("Configura Supabase o inicia el modo demostración local para registrar asientos.");
                 setCargando(false);
                 return;
             }
@@ -1247,7 +1248,7 @@ function normalizarPlantillaDetalles(plantilla, cuentasPorId) {
                                                 </span>
                                                 {montoMaximo > 0 && (
                                                     <span className="plantilla-tag-monto">
-                                                        $ {montoMaximo.toFixed(2)}
+                                                        S/ {montoMaximo.toFixed(2)}
                                                     </span>
                                                 )}
                                             </div>
