@@ -113,7 +113,7 @@ function App(){
     const [temaOscuro, setTemaOscuro] = useState(() => localStorage.getItem("tema") === "oscuro");
     const [menuColapsado, setMenuColapsado] = useState(() => localStorage.getItem("menu") === "colapsado");
     const [sesion, setSesion] = useState(() =>
-        !supabaseConfigurado ? { user: { id: "demo-user", email: "admin@contacabal.com" } } : null
+        !supabaseConfigurado ? { esDemo: true, user: { id: "demo-user", email: "admin@contacabal.com" } } : null
     );
     const [cargandoSesion, setCargandoSesion] = useState(supabaseConfigurado);
     const [usuario, setUsuario] = useState(() =>
