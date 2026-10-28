@@ -107,24 +107,28 @@ const PERMISOS_DEFAULT_POR_ROL = {
 };
 
 const PERMISOS_PREDETERMINADOS = PERMISOS_DEFAULT_POR_ROL.ADMIN;
+const DEMO_SESSION_KEY = "contacabal_demo_session";
+const DEMO_USER = { id: 1, nombre: "Administrador Demo", rol: "ADMIN", empresa_id: 1, estado: true };
+const DEMO_EMPRESA = { id: 1, nombre_empresa: "Empresa demo", estado: true };
 
 function App(){
     const [vista, setVista] = useState("dashboard");
     const [temaOscuro, setTemaOscuro] = useState(() => localStorage.getItem("tema") === "oscuro");
     const [menuColapsado, setMenuColapsado] = useState(() => localStorage.getItem("menu") === "colapsado");
-    const [sesion, setSesion] = useState(() =>
-        !supabaseConfigurado ? { esDemo: true, user: { id: "demo-user", email: "admin@contacabal.com" } } : null
-    );
+    const [sesion, setSesion] = useState(() => {
+        if (supabaseConfigurado) return null;
+        return localStorage.getItem(DEMO_SESSION_KEY) ? { esDemo: true, user: { id: "demo-user", email: "admin@contacabal.local" } } : null;
+    });
     const [cargandoSesion, setCargandoSesion] = useState(supabaseConfigurado);
     const [usuario, setUsuario] = useState(() =>
-        !supabaseConfigurado ? { id: 1, nombre: "Contador Principal", rol: "ADMIN", empresa_id: 1, estado: true } : null
+        !supabaseConfigurado && localStorage.getItem(DEMO_SESSION_KEY) ? DEMO_USER : null
     );
     const [empresaActual, setEmpresaActual] = useState(() =>
-        !supabaseConfigurado ? { nombre_empresa: "Empresa demo" } : null
+        !supabaseConfigurado && localStorage.getItem(DEMO_SESSION_KEY) ? DEMO_EMPRESA : null
     );
     const [errorUsuario, setErrorUsuario] = useState("");
     const [permisos, setPermisos] = useState(() =>
-        !supabaseConfigurado ? PERMISOS_PREDETERMINADOS : {}
+        !supabaseConfigurado && localStorage.getItem(DEMO_SESSION_KEY) ? PERMISOS_PREDETERMINADOS : {}
     );
 
     useEffect(() => {
@@ -190,6 +194,11 @@ function App(){
             return undefined;
         }
 
+        if (sesion?.esDemo) {
+            setPermisos(PERMISOS_PREDETERMINADOS);
+            return undefined;
+        }
+
         let cancelado = false;
 
         solicitarApi("/permisos")
@@ -212,6 +221,11 @@ function App(){
 
     useEffect(() => {
         if(!usuario){
+            return undefined;
+        }
+
+        if (sesion?.esDemo) {
+            setEmpresaActual(DEMO_EMPRESA);
             return undefined;
         }
 
@@ -245,6 +259,7 @@ function App(){
 
     async function cerrarSesion() {
         localStorage.removeItem("conta_demo_user_id");
+        localStorage.removeItem(DEMO_SESSION_KEY);
         if(supabase){
             try { await supabase.auth.signOut(); } catch {
                 // Ignorar error al cerrar sesión
@@ -270,8 +285,14 @@ function App(){
         return <main className="login-page"><p>Cargando sesión...</p></main>;
     }
 
-    if(supabaseConfigurado && !sesion){
-        return <Login />;
+    if(!sesion){
+        return <Login onDemoLogin={() => {
+            localStorage.setItem(DEMO_SESSION_KEY, "1");
+            setSesion({ esDemo: true, user: { id: "demo-user", email: "admin@contacabal.local" } });
+            setUsuario(DEMO_USER);
+            setEmpresaActual(DEMO_EMPRESA);
+            setPermisos(PERMISOS_PREDETERMINADOS);
+        }} />;
     }
 
     if(errorUsuario){
