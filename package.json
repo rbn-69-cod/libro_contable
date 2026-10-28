@@ -8,6 +8,7 @@
     "server": "node backend/server.js",
     "dev:server": "node --watch backend/server.js",
     "build": "vite build",
+    "validate:pcge": "node scripts/validate-pcge.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

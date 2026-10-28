@@ -1,7 +1,8 @@
 import { solicitarApi } from "./api";
 import { supabase } from "../lib/supabase";
+import pcge2019 from "../data/pcge-2019.json";
 
-export const CATALOGO_PREDETERMINADO = [
+const CATALOGO_PREDETERMINADO_LEGACY = [
     { codigo: "1", nombre: "ACTIVO", tipo: "ACTIVO", nivel: "GRUPO", padre: null },
     { codigo: "11", nombre: "ACTIVO CORRIENTE", tipo: "ACTIVO", nivel: "SUBGRUPO", padre: "1" },
     { codigo: "1101", nombre: "Efectivo y equivalente", tipo: "ACTIVO", nivel: "CUENTA", padre: "11" },
@@ -47,8 +48,13 @@ export const CATALOGO_PREDETERMINADO = [
     { codigo: "5101", nombre: "Ventas", tipo: "INGRESO", nivel: "CUENTA", padre: "51" },
     { codigo: "5102", nombre: "Devolución sobre ventas", tipo: "INGRESO", nivel: "CUENTA", padre: "51" }
 ];
-export const TIPOS_VALIDOS = ["ACTIVO", "PASIVO", "PATRIMONIO", "INGRESO", "GASTO", "COSTO"];
-export const NIVELES_VALIDOS = ["GRUPO", "SUBGRUPO", "CUENTA", "SUBCUENTA"];
+
+// Catálogo oficial completo. El bloque legado se conserva solo como referencia histórica;
+// las altas nuevas y la importación predeterminada usan exclusivamente PCGE 2019.
+void CATALOGO_PREDETERMINADO_LEGACY;
+export const CATALOGO_PREDETERMINADO = pcge2019.cuentas;
+export const TIPOS_VALIDOS = ["ACTIVO", "PASIVO", "PATRIMONIO", "INGRESO", "GASTO", "COSTO", "RESULTADO", "ANALITICA", "ORDEN"];
+export const NIVELES_VALIDOS = ["ELEMENTO", "GRUPO", "SUBGRUPO", "CUENTA", "SUBCUENTA", "DIVISIONARIA", "SUBDIVISIONARIA"];
 
 /**
  * Normaliza sinónimos, plurales, categorías numéricas oficiales (1..7 SSF/BCR/Gobierno) y formatos de tipos de cuenta.
@@ -104,19 +110,21 @@ export function normalizarTipo(tipo, codigo = "", nombre = "") {
 export function normalizarNivel(nivel, codigo = "") {
     const n = String(nivel !== undefined && nivel !== null ? nivel : "").trim().toUpperCase().replace(/[\s\-_]+/g, " ");
 
-    if (n === "1" || n.includes("ELEMENTO") || n === "GRUPO" || n === "GRUPOS") return "GRUPO";
+    if (n === "1" || n.includes("ELEMENTO") || n === "GRUPO" || n === "GRUPOS") return "ELEMENTO";
     if (n === "2" || n.includes("RUBRO") || n === "SUBGRUPO" || n === "SUBGRUPOS") return "SUBGRUPO";
-    if (n === "3" || n.includes("AGRUPACI") || n.includes("MAYOR 1")) return "SUBGRUPO";
-    if (n === "4" || (n.includes("CUENTA") && !n.includes("SUB")) || n === "MAYOR") return "CUENTA";
-    if (n === "5" || n.includes("SUBCUENTA") || n === "6" || n.includes("SUBSUB") || n.includes("AUXILIAR") || n.includes("DETALLE")) return "SUBCUENTA";
+    if (n === "3" || n.includes("AGRUPACI") || n.includes("MAYOR 1")) return "SUBCUENTA";
+    if (n === "4" || n.includes("DIVISIONARIA")) return "DIVISIONARIA";
+    if (n === "5" || n.includes("SUBDIVISIONARIA")) return "SUBDIVISIONARIA";
+    if ((n.includes("CUENTA") && !n.includes("SUB")) || n === "MAYOR") return "CUENTA";
 
     // Inferencia por longitud si falta
     if (codigo) {
         const clean = String(codigo).replace(/[^0-9A-Za-z]/g, "");
-        if (clean.length <= 1) return "GRUPO";
+        if (clean.length <= 1) return "ELEMENTO";
         if (clean.length === 2) return "SUBGRUPO";
-        if (clean.length <= 4) return "CUENTA";
-        return "SUBCUENTA";
+        if (clean.length === 3) return "SUBCUENTA";
+        if (clean.length === 4) return "DIVISIONARIA";
+        return "SUBDIVISIONARIA";
     }
 
     return "CUENTA";
@@ -125,7 +133,7 @@ export function normalizarNivel(nivel, codigo = "") {
 /**
  * Deriva la naturaleza contable (Deudora o Acreedora) a partir del tipo, operación (+ o -) y código.
  */
-export function obtenerNaturaleza(tipo, operacion = "", codigo = "") {
+export function obtenerNaturaleza(tipo, operacion = "") {
     const op = String(operacion || "").trim();
     if (op === "-") return "ACREEDORA";
     if (op === "+") return "DEUDORA";
@@ -134,7 +142,7 @@ export function obtenerNaturaleza(tipo, operacion = "", codigo = "") {
     if (t === "ACTIVO" || t === "GASTO" || t === "COSTO") {
         return "DEUDORA";
     }
-    if (t === "PASIVO" || t === "PATRIMONIO" || t === "INGRESO") {
+    if (t === "PASIVO" || t === "PATRIMONIO" || t === "INGRESO" || t === "RESULTADO") {
         return "ACREEDORA";
     }
     return "DEUDORA";
@@ -248,7 +256,7 @@ export function validarCuenta(cuenta, cuentasExistentes = [], cuentaActualId = n
     }
 
     // 5. Regla de negocio: permite_movimientos solo en CUENTA o SUBCUENTA
-    if (permiteMovimientos && (nivel === "GRUPO" || nivel === "SUBGRUPO")) {
+    if (permiteMovimientos && ["ELEMENTO", "GRUPO", "SUBGRUPO"].includes(nivel)) {
         errores.push("Las cuentas de nivel GRUPO y SUBGRUPO son agrupadoras y no pueden permitir movimientos directos.");
     }
 
@@ -301,7 +309,7 @@ export async function crearCuenta(cuenta, cuentasExistentes = [], empresaId) {
         tipo: String(cuenta.tipo).trim().toUpperCase(),
         nivel: String(cuenta.nivel).trim().toUpperCase(),
         cuenta_padre_id: cuenta.cuenta_padre_id ? Number(cuenta.cuenta_padre_id) : null,
-        permite_movimientos: (cuenta.nivel === "GRUPO" || cuenta.nivel === "SUBGRUPO") ? false : Boolean(cuenta.permite_movimientos),
+        permite_movimientos: (["ELEMENTO", "GRUPO", "SUBGRUPO"].includes(cuenta.nivel)) ? false : Boolean(cuenta.permite_movimientos),
         estado: cuenta.estado !== false
     };
 

@@ -1,6 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
+import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 import { validarPartidaDoble } from "./contabilidad.js";
 import { calcularEstadoResultados, inventarioDelMayor } from "./Estadoresultados.js";
@@ -305,9 +306,10 @@ apiRouter.get("/health", (_req, res) => {
     });
 });
 
-const TIPOS_VALIDOS_CATALOGO = ["ACTIVO", "PASIVO", "PATRIMONIO", "INGRESO", "GASTO", "COSTO"];
-const NIVELES_VALIDOS_CATALOGO = ["GRUPO", "SUBGRUPO", "CUENTA", "SUBCUENTA"];
-const CATALOGO_PREDETERMINADO = [
+const TIPOS_VALIDOS_CATALOGO = ["ACTIVO", "PASIVO", "PATRIMONIO", "INGRESO", "GASTO", "COSTO", "RESULTADO", "ANALITICA", "ORDEN"];
+const NIVELES_VALIDOS_CATALOGO = ["ELEMENTO", "GRUPO", "SUBGRUPO", "CUENTA", "SUBCUENTA", "DIVISIONARIA", "SUBDIVISIONARIA"];
+const NIVELES_AGRUPADORES = new Set(["ELEMENTO", "GRUPO", "SUBGRUPO"]);
+const CATALOGO_PREDETERMINADO_LEGACY = [
     { codigo: "1", nombre: "ACTIVO", tipo: "ACTIVO", nivel: "GRUPO", padre: null },
     { codigo: "11", nombre: "ACTIVO CORRIENTE", tipo: "ACTIVO", nivel: "SUBGRUPO", padre: "1" },
     { codigo: "1101", nombre: "Efectivo y equivalente", tipo: "ACTIVO", nivel: "CUENTA", padre: "11" },
@@ -357,10 +359,12 @@ const CATALOGO_PREDETERMINADO = [
     { codigo: "5101", nombre: "Ventas", tipo: "INGRESO", nivel: "CUENTA", padre: "51" },
     { codigo: "5102", nombre: "Devolución sobre ventas", tipo: "INGRESO", nivel: "CUENTA", padre: "51" }
 ];
+const CATALOGO_PREDETERMINADO = JSON.parse(readFileSync(new URL("../src/data/pcge-2019.json", import.meta.url), "utf8")).cuentas;
+void CATALOGO_PREDETERMINADO_LEGACY;
 function derivarNaturaleza(tipo) {
     const t = String(tipo || "").toUpperCase();
     if (t === "ACTIVO" || t === "GASTO" || t === "COSTO") return "DEUDORA";
-    if (t === "PASIVO" || t === "PATRIMONIO" || t === "INGRESO") return "ACREEDORA";
+    if (t === "PASIVO" || t === "PATRIMONIO" || t === "INGRESO" || t === "RESULTADO") return "ACREEDORA";
     return "DEUDORA";
 }
 
@@ -459,7 +463,7 @@ apiRouter.post("/cuentas", async (req, res) => {
 
         // Regla: permite_movimientos solo válido en CUENTA o SUBCUENTA
         let movPermitido = Boolean(permite_movimientos);
-        if (nivelUpper === "GRUPO" || nivelUpper === "SUBGRUPO") {
+        if (NIVELES_AGRUPADORES.has(nivelUpper)) {
             if (movPermitido) {
                 throw new Error("Las cuentas de nivel GRUPO y SUBGRUPO son agrupadoras y no pueden permitir movimientos directos.");
             }
@@ -590,7 +594,7 @@ apiRouter.patch("/cuentas/:id", async (req, res) => {
             if (req.body.estado !== undefined) {
                 cambios.estado = Boolean(req.body.estado);
             }
-            if (req.body.permite_movimientos !== undefined && (anterior.nivel === "CUENTA" || anterior.nivel === "SUBCUENTA")) {
+            if (req.body.permite_movimientos !== undefined && !NIVELES_AGRUPADORES.has(String(anterior.nivel || "").toUpperCase())) {
                 cambios.permite_movimientos = Boolean(req.body.permite_movimientos);
             }
                 } else {
@@ -662,10 +666,10 @@ apiRouter.patch("/cuentas/:id", async (req, res) => {
             }
 
             if (req.body.permite_movimientos !== undefined) {
-                if (Boolean(req.body.permite_movimientos) && (nivelFinal === "GRUPO" || nivelFinal === "SUBGRUPO")) {
+                if (Boolean(req.body.permite_movimientos) && NIVELES_AGRUPADORES.has(nivelFinal)) {
                     throw new Error("Las cuentas de nivel GRUPO y SUBGRUPO no pueden permitir movimientos directos.");
                 }
-                cambios.permite_movimientos = (nivelFinal === "GRUPO" || nivelFinal === "SUBGRUPO") ? false : Boolean(req.body.permite_movimientos);
+                cambios.permite_movimientos = NIVELES_AGRUPADORES.has(nivelFinal) ? false : Boolean(req.body.permite_movimientos);
             }
 
             if (req.body.estado !== undefined) {
